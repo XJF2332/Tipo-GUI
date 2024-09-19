@@ -39,6 +39,11 @@ def upsampling_prompt(quality_tags, mode_tags, length_tags, general_tags, max_to
 
 
 with gr.Blocks() as demo:
+    gr.Markdown("""
+    # TITPOP!
+    Write prompts, and let the AI generate prompts for you!
+    """)
+
     with gr.Row():
         with gr.Column():
             model_selector = gr.Dropdown(label="Select Model", choices=available_models)
@@ -64,6 +69,37 @@ with gr.Blocks() as demo:
             general_tags = gr.Textbox(label="general tags")
             upsampling_btn = gr.Button("TITPOP!")
             output = gr.Textbox(label="output", interactive=False)
+
+    gr.Markdown("""
+            ## About this model
+            - put models into `models` folder, if there's no `models` folder, create one
+            - only `.gguf` models are supported
+            - remember to load model before running
+            ## Arguments
+            - `max_tokens`：max length of generated prompts (although default is 1024, but 128 is absolutely enough)
+            - `n_gpu_layers`：GPU Usage. -1 means max, 0 means CPU (this models has 200M params, so CPU is enough, but GPU is absolutely faster)
+            - `temperature`：the higher this value is, the more random the generated prompts will be
+            - `seed`：is anyone want an explanation for this? (≧∀≦)ゞ
+            ## Tags
+            #### quality
+            - quality tags in your promtps, like `masterpiece`
+            #### mode
+            - controls what kind of prompts you want to generate
+            - `None` : Danbooru Tags
+            - `tag_to_long` : Long Natural Language Description
+            - `long_to_tag` : Long Natural Language Description to Danbooru Tags
+            - `short_to_long` : Short Natural Language Description to Long Natural Language Description 
+            - `short_to_tag` : Short Natural Language Description to Danbooru Tags
+            - `tag_to_short_to_long` : Danbooru Tags to Short Natural Language Description to Long Natural Language Description
+            - `short_to_tag_to_long` : Short Natural Language Description to Danbooru Tags to Long Natural Language Description
+            - `short_to_long_to_tag` : Short Natural Language Description to Long Natural Language Description to Danbooru Tags
+            #### target
+            - how long the generated prompts will be
+            #### general
+            - all other prompts when you are writing SD prompts
+            ## output
+            - a clever user should learn to check output for themselves
+            """)
 
     # button event
     upsampling_btn.click(

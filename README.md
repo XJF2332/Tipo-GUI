@@ -4,9 +4,11 @@
 
 ## 琥珀青叶（繁体字不会打）大佬的`TITPOP`的 GUI 版本
 
-要查看`TITPOP`的模型权重，前往：https://hf-mirror.com/KBlueLeaf/TITPOP-200M-dev
+要查看`TITPOP`的模型权重，前往：[TITPOP](https://hf-mirror.com/KBlueLeaf/TITPOP-200M-dev)
 
-或者有能力的可以直接去huggingface的原站点看看
+或者有能力的可以直接去[huggingface的原站点](https://huggingface.co/KBlueLeaf/TITPOP-200M-dev)看看
+
+[琥珀佬的Github主页](https://github.com/KohakuBlueleaf)
 
 ## 使用方法
 

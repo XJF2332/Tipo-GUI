@@ -20,3 +20,7 @@
 llama-cpp-python
 gradio
 ```
+
+---
+
+以及，谁知道脚本里的`aspect_ratio`这个参数是个啥，我自己都没搞懂（

@@ -1,5 +1,7 @@
 # TITPOP GUI
 
+![img.png](img.png)
+
 ## 琥珀青叶（繁体字不会打）大佬的`TITPOP`的 GUI 版本
 
 要查看`TITPOP`的模型权重，前往：https://hf-mirror.com/KBlueLeaf/TITPOP-200M-dev

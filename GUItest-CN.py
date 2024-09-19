@@ -74,6 +74,7 @@ with gr.Blocks() as demo:
         ## 关于模型
         - 把模型放在`models`文件夹中
         - 只支持`.gguf`模型
+        - 记得选择完后点击加载模型
         ## 关于参数
         - `max_tokens`：生成的最大长度
         - `n_gpu_layers`：使用GPU的层数。-1表示使用全部GPU，0表示使用CPU

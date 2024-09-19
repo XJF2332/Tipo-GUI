@@ -97,6 +97,8 @@ with gr.Blocks() as demo:
         - 控制生成内容的长度
         #### Tags
         - 你在跑图时写的其他所有标签
+        ## 关于输出
+        - 成熟的跑图玩家应该会自己看输出
         """)
 
     # button event

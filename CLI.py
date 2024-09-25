@@ -16,6 +16,7 @@ print("可用的模型：")
 valid_models = [model for model in available_models if model.endswith('.gguf')]
 if not valid_models:
     print("未找到模型。请输入一个有效的模型名称。")
+    exit()
 else:
     for index, model_file in enumerate(valid_models, start=1):
         print(f"{index}. {model_file}")
@@ -27,8 +28,10 @@ else:
             print("选中的模型：", model)
         else:
             print("无效的序号。退出...")
+            exit()
     except ValueError:
         print("输入的不是有效的数字。退出...")
+        exit()
 
 # 加载模型
 print("-" * 10)
@@ -91,33 +94,28 @@ def get_prompt():
 
 print("-" * 10)
 
+maxtoken, temp, Seed = get_params()
+quality_tags, mode_tags, length_tags, general_tags = get_prompt()
+
 while True:
-    maxtoken, temp, Seed = get_params()
-    while True:
-        quality_tags, mode_tags, length_tags, general_tags = get_prompt()
+    output = llm(
+        f"quality: {quality_tags}\naspect ratio: 1.0\ntarget: <|{length_tags}|> <|{mode_tags}|>\ntag: {general_tags}",
+        max_tokens=maxtoken,
+        temperature=temp,
+        seed=Seed,
+        echo=True
+    )
+    print(output['choices'][0]['text'])
+    print("")
 
-        while True:
-            output = llm(
-                f"quality: {quality_tags}\naspect ratio: 1.0\ntarget: <|{length_tags}|> <|{mode_tags}|>\ntag: {general_tags}",
-                max_tokens=maxtoken,
-                temperature=temp,
-                seed=Seed,
-                echo=True
-            )
-            print(output['choices'][0]['text'])
-            print("")
-
-            # 询问用户是否重新生成
-            user_input = input("是否重新生成？(y/n): ")
-            if user_input.lower() != 'y':
-                break
-
-        # 询问用户是否继续获取新的提示
-        user_input = input("是否获取新的提示？(y/n): ")
-        if user_input.lower() != 'y':
-            break
-
-    # 询问用户是否重新获取参数
-    user_input = input("是否重新获取参数？(y/n): ")
-    if user_input.lower() != 'y':
+    # 询问用户是否重新生成
+    regenerate = input("是否重新生成？(y/n): ")
+    if regenerate.lower() == 'y':
+        re_prompting = input("是否重新输入提示词？(y/n): ")
+        if re_prompting.lower() == 'y':
+            quality_tags, mode_tags, length_tags, general_tags = get_prompt()
+        re_param = input("是否重新输入参数？(y/n): ")
+        if re_param.lower() == 'y':
+            maxtoken, temp, Seed = get_params()
+    else:
         break

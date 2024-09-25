@@ -1,10 +1,11 @@
 # TITPOP GUI
 
+![img_1.png](img_1.png)
 ![img.png](img.png)
 
 ## 琥珀青叶（繁体字不会打）大佬的`TITPOP`的 GUI 版本
 
-要查看`TITPOP`的模型权重，前往：[TITPOP](https://hf-mirror.com/KBlueLeaf/TITPOP-200M-dev)
+要查看`TITPOP`的模型权重，前往：[TITPOP（镜像站）](https://hf-mirror.com/KBlueLeaf/TITPOP-200M-dev)
 
 或者有能力的可以直接去[huggingface的原站点](https://huggingface.co/KBlueLeaf/TITPOP-200M-dev)看看
 
@@ -12,15 +13,14 @@
 
 ## 使用方法
 
-去[TITPOP](https://hf-mirror.com/KBlueLeaf/TITPOP-200M-dev)下载`.gguf`文件，放进脚本所在目录下的`models`文件夹里
-
-然后自己选一个喜欢的脚本跑起来就行了
+去前面提到的模型权重那里下载`.gguf`文件，放进脚本所在目录下的`models`文件夹里，然后直接打开GUI.py就行了（记得先配置好环境）
 
 ## 依赖
-
+llama-cpp-python 要 GPU 版的
 ```
 llama-cpp-python
 gradio
+pyperclip
 ```
 
 ---

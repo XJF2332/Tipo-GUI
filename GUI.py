@@ -89,6 +89,9 @@ available_models = list_model_files()
 
 print("正在启动 Gradio UI...")
 
+with open("Locales/Tutorials/zh_CN.md", "r", encoding="utf-8") as tutorial:
+    tutorial_content = tutorial.read()
+
 with gr.Blocks() as demo:
     gr.Markdown("""
     # TITPOP
@@ -133,43 +136,7 @@ with gr.Blocks() as demo:
                 top_k = gr.Number(label="top_k", value=60)
 
             with gr.Tab("教程"):
-                gr.Markdown("""
-                    ## 关于模型
-                    - 把模型放在`models`文件夹中
-                    - 只支持`.gguf`模型
-                    - 记得选择完后点击加载模型
-                    ## 关于参数
-                    - `max_tokens`：生成的最大长度（虽然是默认1024，但其实128也是够用的）
-                    - `n_gpu_layers`：使用GPU的层数。-1表示使用全部GPU，0表示使用CPU（模型只有200M，所以其实只用CPU也不见得多慢，而且还可以给SD省一点显存）
-                    - `temperature`：温度。值越高，则生成结果越随机，值越低，则结果越保守
-                    - `n_ctx`：上下文长度。这个值越大，模型能记住的信息越多，但也会导致显存占用增加
-                    - `top_p`、`min_p`、`top_k`：我也不知道是啥，所以建议保持默认（
-                    - `种子`：这个不需要解释吧(≧∀≦)ゞ
-                    ## 关于Tags
-                    #### 预期质量
-                    - 就是提示词里的质量标签，比如`masterpiece`这样的
-                    #### 模式
-                    - 控制模型生成的内容
-                    - `None`：Danbooru标签 
-                    - `tag_to_long`：长自然语言描述 
-                    - `long_to_tag`：长自然语言描述转Danbooru标签 
-                    - `short_to_long`：短自然语言描述转长自然语言描述 
-                    - `short_to_tag`：短自然语言描述转Danbooru标签 
-                    - `tag_to_short_to_long`：Danbooru标签转短自然语言描述再转长自然语言描述 
-                    - `short_to_tag_to_long`：短自然语言描述转Danbooru标签再转长自然语言描述 
-                    - `short_to_long_to_tag`：短自然语言描述转长自然语言描述再转Danbooru标签 
-                    #### 目标长度
-                    - 控制生成内容的长度
-                    #### Tags
-                    - 你在跑图时写的其他所有标签
-                    ## 关于输出
-                    ### 结果
-                    - 模型生成的文本
-                    - 并不是原始结果，只是经过了处理的原始结果，不能直接用来出图，但可以获得比格式化结果更多的信息
-                    - 如果要查看原始结果，取消注释`#for testing`的代码，然后在控制台查看原始结果
-                    ### 格式化结果
-                    - 模型生成的文本，经过格式化处理，可以直接用来出图
-                    """)
+                gr.Markdown(tutorial_content)
         with gr.Column():
             upsampling_btn = gr.Button("TITPOP!")
             with gr.Row():

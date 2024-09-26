@@ -46,7 +46,7 @@ def upsampling_prompt(quality_tags, mode_tags, length_tags, general_tags, max_to
 
 
 def extract_and_format(model_out):
-    fields_to_extract = ['quality', 'tag', 'long', 'short', 'artist', 'characters', 'meta', 'rating']
+    fields_to_extract = ['quality', 'artist', 'tag', 'long', 'short', 'characters', 'meta', 'rating']
 
     def extract_fields(model_output):
         extracted_data = {}
@@ -62,8 +62,12 @@ def extract_and_format(model_out):
     formatted_output = ""
 
     for field in fields_to_extract:
-        # Add the field and its value or an empty line if the field is missing
-        formatted_output += f"{extracted_data.get(field, '')}\n\n"
+        value = extracted_data.get(field, '')
+        if value:  # Only add the field if it has a value
+            formatted_output += f"{value}\n\n"
+
+    # Remove the last two newline characters to ensure no extra space at the end
+    formatted_output = formatted_output.rstrip('\n')
 
     return formatted_output
 
@@ -72,6 +76,7 @@ def update_format_output(formatted_text):
     text = extract_and_format(formatted_text)
     format_output = gr.Textbox(value=text, interactive=False)
     return format_output
+
 
 def copy_to_clipboard(output):
     pyperclip.copy(output)
@@ -84,7 +89,7 @@ available_models = list_model_files()
 
 print("正在启动 Gradio UI...")
 
-with gr.Blocks() as iface:
+with gr.Blocks() as demo:
     gr.Markdown("""
     # TITPOP
     """)
@@ -195,4 +200,4 @@ with gr.Blocks() as iface:
         outputs=copy_info
     )
 
-iface.launch()
+demo.launch()

@@ -1,6 +1,5 @@
 # TITPOP GUI
 
-![img_1.png](img_1.png)
 ![img.png](img.png)
 
 ## 琥珀青叶（繁体字不会打）大佬的`TITPOP`的 GUI 版本

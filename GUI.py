@@ -5,7 +5,9 @@ from llama_cpp import Llama
 import gradio as gr
 import random
 import pyperclip
+import re
 
+llm = None
 
 def list_model_files():
     models_dir = 'models'
@@ -19,8 +21,15 @@ def random_seed():
 
 def load_model(model_path, gpu, n_ctx):
     global llm
+    llm = None
     llm = Llama(model_path=model_path, n_gpu_layers=gpu, n_ctx=n_ctx)
     return f"模型 {model_path} 已加载"
+
+
+def unload_model():
+    global llm
+    llm = None
+    return "模型已卸载"
 
 
 def upsampling_prompt(quality_tags, mode_tags, length_tags, general_tags, max_token, temp, Seed, top_p, min_p, top_k):
@@ -72,9 +81,23 @@ def extract_and_format(model_out):
     return formatted_output
 
 
-def update_format_output(formatted_text):
+def remove_words_by_regex(sentence, pattern):
+    # 使用正则表达式分割句子
+    words = re.split(r',\s*|,', sentence)
+    # 过滤掉符合正则表达式的词
+    filtered_words = [word for word in words if not re.match(pattern, word)]
+    # 重新组合成字符串
+    result = ', '.join(filtered_words)
+    return result
+
+
+def update_format_output(formatted_text, banned_tags):
     text = extract_and_format(formatted_text)
-    format_output = gr.Textbox(value=text, interactive=False)
+    if banned_tags:
+        formatted = remove_words_by_regex(text, banned_tags)
+    else:
+        formatted = text
+    format_output = gr.Textbox(value=formatted, interactive=False)
     return format_output
 
 
@@ -101,7 +124,7 @@ with gr.Blocks() as demo:
         with gr.Column():
             with gr.Tab("生成"):
                 with gr.Row():
-                    Seed = gr.Number(label="种子", value=1)
+                    Seed = gr.Number(label="种子", value=-1)
                     Seed_random = gr.Button("随机")
                 with gr.Row():
                     mode_tags = gr.Dropdown(
@@ -115,7 +138,9 @@ with gr.Blocks() as demo:
                         choices=["very_short", "short", "long", "very_long"],
                         value="short"
                     )
-                quality_tags = gr.Textbox(label="预期质量")
+                with gr.Row():
+                    quality_tags = gr.Textbox(label="预期质量")
+                    banned_tags = gr.Textbox(label="排除标签")
                 general_tags = gr.Textbox(label="Tags")
 
             with gr.Tab("设置"):
@@ -124,7 +149,9 @@ with gr.Blocks() as demo:
                 with gr.Row():
                     n_ctx = gr.Number(label="n_ctx", value=2048)
                     n_gpu_layers = gr.Number(label="n_gpu_layers", value=-1)
-                load_btn = gr.Button("加载模型")
+                with gr.Row():
+                    unload_btn = gr.Button("卸载模型")
+                    load_btn = gr.Button("加载模型")
                 load_feedback = gr.Markdown("")
                 gr.Markdown("生成设置")
                 with gr.Row():
@@ -145,7 +172,7 @@ with gr.Blocks() as demo:
             with gr.Row():
                 raw_output = gr.Textbox(label="结果", interactive=False)
                 formatted_output = gr.Textbox(label="格式化结果", interactive=False)
-                raw_output.change(update_format_output, inputs=raw_output, outputs=formatted_output)
+                raw_output.change(update_format_output, inputs=[raw_output, banned_tags], outputs=formatted_output)
 
     # button event
     upsampling_btn.click(
@@ -156,6 +183,11 @@ with gr.Blocks() as demo:
     load_btn.click(
         fn=load_model,
         inputs=[model_selector, n_gpu_layers, n_ctx],
+        outputs=load_feedback
+    )
+    unload_btn.click(
+        fn=unload_model,
+        inputs=None,
         outputs=load_feedback
     )
     Seed_random.click(

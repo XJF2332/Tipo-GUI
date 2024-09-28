@@ -5,6 +5,7 @@
   "unload_model_success": "模型已卸载",
   "model_not_loaded": "模型未加载",
   "copy_success": "已复制",
+  "copy_fail": "复制失败",
   "model_searching": "正在搜索模型文件......",
   "gradio_launching": "正在启动 Gradio 界面......",
   "tab_generate": "生成",

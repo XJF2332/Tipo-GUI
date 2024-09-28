@@ -22,6 +22,24 @@ import re
 
 llm = None
 
+theme = gr.themes.Base(
+    primary_hue="violet",
+    secondary_hue="indigo",
+    radius_size="sm",
+).set(
+    background_fill_primary='*neutral_50',
+    border_color_accent='*neutral_50',
+    color_accent_soft='*neutral_50',
+    shadow_drop='none',
+    shadow_drop_lg='none',
+    shadow_inset='none',
+    shadow_spread='none',
+    shadow_spread_dark='none',
+    layout_gap='*spacing_xl',
+    checkbox_background_color='*primary_50',
+    checkbox_background_color_focus='*primary_200'
+)
+
 
 def list_model_files():
     models_dir = 'models'
@@ -37,7 +55,7 @@ def load_model(model_path, gpu, n_ctx):
     global llm
     llm = None
     llm = Llama(model_path=model_path, n_gpu_layers=gpu, n_ctx=n_ctx)
-    return locale["load_model_success"].format(model_path = model_path)
+    return locale["load_model_success"].format(model_path=model_path)
 
 
 def unload_model():
@@ -131,8 +149,11 @@ def update_format_output(formatted_text, banned_tags):
 
 
 def copy_to_clipboard(output):
-    pyperclip.copy(output)
-    return locale["copy_success"]
+    try:
+        pyperclip.copy(output)
+        gr.Info(locale["copy_success"])
+    except Exception as e:
+        gr.Error(locale["copy_fail"])
 
 
 print(locale["model_searching"])
@@ -144,7 +165,7 @@ print(locale["gradio_launching"])
 with open(os.path.join('Locales', 'Tutorials', f'{lang}.md'), "r", encoding="utf-8") as tutorial:
     tutorial_content = tutorial.read()
 
-with gr.Blocks() as demo:
+with gr.Blocks(theme=theme) as demo:
     gr.Markdown("""
     # TITPOP
     """)
@@ -181,7 +202,7 @@ with gr.Blocks() as demo:
                     n_gpu_layers = gr.Number(label="n_gpu_layers", value=-1)
                 with gr.Row():
                     unload_btn = gr.Button(locale["model_unload"])
-                    load_btn = gr.Button(locale["model_load"])
+                    load_btn = gr.Button(locale["model_load"],variant="primary")
                 load_feedback = gr.Markdown("")
                 gr.Markdown(locale["generate_settings"])
                 with gr.Row():
@@ -195,10 +216,9 @@ with gr.Blocks() as demo:
             with gr.Tab(locale["tab_tutorial"]):
                 gr.Markdown(tutorial_content)
         with gr.Column():
-            upsampling_btn = gr.Button("TITPOP!")
             with gr.Row():
+                upsampling_btn = gr.Button("TITPOP!", variant="primary")
                 copy_btn = gr.Button(locale["copy_to_clipboard"])
-                copy_info = gr.Textbox(show_label=False, interactive=False)
             with gr.Row():
                 raw_output = gr.Textbox(label=locale["result"], interactive=False)
                 formatted_output = gr.Textbox(label=locale["formatted_result"], interactive=False)
@@ -228,7 +248,7 @@ with gr.Blocks() as demo:
     copy_btn.click(
         fn=copy_to_clipboard,
         inputs=formatted_output,
-        outputs=copy_info
+        outputs=None
     )
 
 demo.launch()

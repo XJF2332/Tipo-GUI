@@ -81,7 +81,7 @@ def upsampling_prompt(quality_tags, mode_tags, length_tags, general_tags, max_to
     )
 
     # for testing
-    print(output)
+    # print(output)
 
     return output['choices'][0]['text']
 

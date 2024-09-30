@@ -1,12 +1,12 @@
-# TITPOP GUI
+# TIPO GUI
 
 [中文版看这里](README.md)
 
 ![img.png](img.png)
 
-## GUI Version of KohakuBlueLeaf's `TITPOP`
+## GUI Version of KohakuBlueLeaf's `TIPO`
 
-To view the model weights of `TITPOP`, go to mirror site: [200M](https://hf-mirror.com/KBlueLeaf/TIPO-200M)、[500M](https://hf-mirror.com/KBlueLeaf/TIPO-500M)、[GGUF(QuantFactory)](https://hf-mirror.com/QuantFactory/TIPO-500M-GGUF)  
+To view the model weights of `TIPO`, go to mirror site: [200M](https://hf-mirror.com/KBlueLeaf/TIPO-200M)、[500M](https://hf-mirror.com/KBlueLeaf/TIPO-500M)、[GGUF(QuantFactory)](https://hf-mirror.com/QuantFactory/TIPO-500M-GGUF)  
 Or if you can, directly visit the original site: [200M](https://huggingface.co/KBlueLeaf/TIPO-200M)、[500M](https://huggingface.co/KBlueLeaf/TIPO-500M)、[GGUF(QuantFactory)](https://huggingface.co/QuantFactory/TIPO-500M-GGUF)  
 [KohakuBlueleaf's GitHub Homepage](https://github.com/KohakuBlueleaf)  
 

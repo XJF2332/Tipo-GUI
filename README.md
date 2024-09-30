@@ -1,13 +1,12 @@
-# TITPOP GUI
+# TIPO GUI
 
 [SEE ENGLISH VERSION](README-en.md)
 
 ![img.png](img.png)
 
-## 琥珀青葉大佬的`TITPOP`的 GUI 版本
+## 琥珀青葉大佬的`TIPO`的 GUI 版本
 
-要查看`TITPOP`
-的模型权重，前往镜像站：[200M](https://hf-mirror.com/KBlueLeaf/TIPO-200M)、[500M](https://hf-mirror.com/KBlueLeaf/TIPO-500M)、[GGUF(QuantFactory)](https://hf-mirror.com/QuantFactory/TIPO-500M-GGUF)  
+要查看`TIPO`的模型权重，前往镜像站：[200M](https://hf-mirror.com/KBlueLeaf/TIPO-200M)、[500M](https://hf-mirror.com/KBlueLeaf/TIPO-500M)、[GGUF(QuantFactory)](https://hf-mirror.com/QuantFactory/TIPO-500M-GGUF)  
 或者有能力的可以直接去原站点：[200M](https://huggingface.co/KBlueLeaf/TIPO-200M)、[500M](https://huggingface.co/KBlueLeaf/TIPO-500M)、[GGUF(QuantFactory)](https://huggingface.co/QuantFactory/TIPO-500M-GGUF)  
 [琥珀佬的Github主页](https://github.com/KohakuBlueleaf)
 

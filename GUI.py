@@ -48,7 +48,7 @@ def list_model_files():
 
 
 def random_seed():
-    return random.randint(1, 100000)
+    return random.randint(1, 2**31-1)
 
 
 def load_model(model_path, gpu, n_ctx):

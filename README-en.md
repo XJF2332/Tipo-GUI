@@ -6,17 +6,17 @@
 
 ## GUI Version of KohakuBlueLeaf's `TITPOP`
 
-To view the model weights of `TITPOP`, go to: [TITPOP (Mirror)](https://hf-mirror.com/KBlueLeaf/TITPOP-200M-dev)  
-Or if you're capable, directly visit [the original Hugging Face site](https://huggingface.co/KBlueLeaf/TITPOP-200M-dev)  
-[KohakuBlueleaf's Github Homepage](https://github.com/KohakuBlueleaf)  
+To view the model weights of `TITPOP`, go to mirror site: [200M](https://hf-mirror.com/KBlueLeaf/TIPO-200M)、[500M](https://hf-mirror.com/KBlueLeaf/TIPO-500M)、[GGUF(QuantFactory)](https://hf-mirror.com/QuantFactory/TIPO-500M-GGUF)  
+Or if you can, directly visit the original site: [200M](https://huggingface.co/KBlueLeaf/TIPO-200M)、[500M](https://huggingface.co/KBlueLeaf/TIPO-500M)、[GGUF(QuantFactory)](https://huggingface.co/QuantFactory/TIPO-500M-GGUF)  
+[KohakuBlueleaf's GitHub Homepage](https://github.com/KohakuBlueleaf)  
 
-Thank [Yi-1.5](https://github.com/01-ai/Yi-1.5) for translating this to English.  
+Thank [Yi-1.5](https://github.com/01-ai/Yi-1.5) for translating this README to English.  
 Thank [GLM4](https://chatglm.cn/main/alltoolsdetail?lang=zh) for providing some of the code (since I am really not good
 at it, so I have to use AI)  
 
 ## Dependencies
 
-You need the GPU version of `llama-cpp-python`.
+You need the GPU version of `llama-cpp-python`. I don't know if there is a `n_gpu_layers` parameter in the CPU version, so use GPU version for safety.
 
 ```
 llama-cpp-python

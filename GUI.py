@@ -165,9 +165,9 @@ print(locale["gradio_launching"])
 with open(os.path.join('Locales', 'Tutorials', f'{lang}.md'), "r", encoding="utf-8") as tutorial:
     tutorial_content = tutorial.read()
 
-with gr.Blocks(theme=theme) as demo:
+with gr.Blocks(theme=theme, title="TIPO") as demo:
     gr.Markdown("""
-    # TITPOP
+    # TIPO
     """)
 
     with gr.Row():
@@ -217,7 +217,7 @@ with gr.Blocks(theme=theme) as demo:
                 gr.Markdown(tutorial_content)
         with gr.Column():
             with gr.Row():
-                upsampling_btn = gr.Button("TITPOP!", variant="primary")
+                upsampling_btn = gr.Button("TIPO！", variant="primary")
                 copy_btn = gr.Button(locale["copy_to_clipboard"])
             with gr.Row():
                 raw_output = gr.Textbox(label=locale["result"], interactive=False)

@@ -33,8 +33,7 @@ pyperclip
 4. If you don't understand the parameters, you have two options: Don't touch them, or go to the "Tutorials" page for an
    explanation.
 5. See below for generation settings, with the same two choices as above.
-6. Go to the "Generate" page, select your mode, length, write your prompt, quality, then click "TITPOP!" and you're
-   good.
+6. Go to the "Generate" page, select your mode, length, write your prompt, quality, then click "TIPO!".
 7. Click "Copy to Clipboard" to copy the results.
 
 ## Localization

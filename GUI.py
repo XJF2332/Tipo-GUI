@@ -64,12 +64,12 @@ def unload_model():
     return locale["unload_model_success"]
 
 
-def upsampling_prompt(quality_tags, mode_tags, length_tags, general_tags, max_token, temp, Seed, top_p, min_p, top_k):
+def upsampling_prompt(quality_tags, mode_tags, length_tags, tags, max_token, temp, Seed, top_p, min_p, top_k):
     if llm is None:
         return locale["model_not_loaded"]
 
     output = llm(
-        f"quality: {quality_tags}\naspect ratio: 1.0\ntarget: <|{length_tags}|> <|{mode_tags}|>\ntag: {general_tags}",
+        f"quality: {quality_tags}\naspect ratio: 1.0\ntarget: <|{length_tags}|> <|{mode_tags}|>\ntag: {tags}",
         # Prompt
         max_tokens=max_token,
         echo=True,
@@ -192,7 +192,7 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
                 with gr.Row():
                     quality_tags = gr.Textbox(label=locale["quality"])
                     banned_tags = gr.Textbox(label=locale["banned_tags"])
-                general_tags = gr.Textbox(label=locale["general_tags"])
+                tags = gr.Textbox(label=locale["general_tags"])
 
             with gr.Tab(locale["tab_settings"]):
                 gr.Markdown(locale["model_settings"])
@@ -227,7 +227,7 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
     # button event
     upsampling_btn.click(
         fn=upsampling_prompt,
-        inputs=[quality_tags, mode_tags, length_tags, general_tags, max_tokens, temprature, Seed, top_p, min_p, top_k],
+        inputs=[quality_tags, mode_tags, length_tags, tags, max_tokens, temprature, Seed, top_p, min_p, top_k],
         outputs=raw_output
     )
     load_btn.click(

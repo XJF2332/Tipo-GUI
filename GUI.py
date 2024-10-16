@@ -22,7 +22,7 @@ import re
 
 llm = None
 
-theme = gr.themes.Base(
+theme = gr.themes.Ocean(
     primary_hue="violet",
     secondary_hue="indigo",
     radius_size="sm",
@@ -153,7 +153,7 @@ def copy_to_clipboard(output):
         pyperclip.copy(output)
         gr.Info(locale["copy_success"])
     except Exception as e:
-        gr.Error(locale["copy_fail"])
+        raise gr.Error(locale["copy_fail"])
 
 
 print(locale["model_searching"])

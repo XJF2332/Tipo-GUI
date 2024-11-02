@@ -184,7 +184,7 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
         with gr.Column():
             # 生成标签页
             with gr.Tab(locale["tab_generate"]):
-                with gr.Row():
+                with gr.Row(equal_height=True):
                     # 种子
                     Seed = gr.Number(label=locale["seed"], value=-1)
                     Seed_random = gr.Button(locale["random_seed"])

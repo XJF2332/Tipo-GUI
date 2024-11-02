@@ -1,6 +1,8 @@
 import json
 import os
 
+##########################
+
 # 加载语言
 print("Loading configs...")
 with open(os.path.join('Locales', 'config.json'), 'r', encoding='utf-8') as f:
@@ -10,6 +12,8 @@ with open(os.path.join('Locales', f'{lang}.json'), 'r', encoding='utf-8') as f:
     locale = json.load(f)
 print(locale["locale_load_success"])
 
+##########################
+
 # 导入库
 print(locale["import_libs"])
 from llama_cpp import Llama
@@ -18,7 +22,11 @@ import random
 import pyperclip
 import re
 
+##########################
+
 llm = None
+
+##########################
 
 # 主题
 theme = gr.themes.Ocean(
@@ -39,6 +47,7 @@ theme = gr.themes.Ocean(
     checkbox_background_color_focus='*primary_200'
 )
 
+##########################
 
 # 获取模型文件列表
 def list_model_files():
@@ -46,11 +55,13 @@ def list_model_files():
     model_files = [f for f in os.listdir(models_dir) if f.endswith('.gguf')]
     return [os.path.join(models_dir, f) for f in model_files]
 
+##########################
 
 # 随机种
 def random_seed():
     return random.randint(1, 2 ** 31 - 1)
 
+##########################
 
 # 加载模型
 def load_model(model_path, gpu, n_ctx):
@@ -59,6 +70,7 @@ def load_model(model_path, gpu, n_ctx):
     llm = Llama(model_path=model_path, n_gpu_layers=gpu, n_ctx=n_ctx)
     return locale["load_model_success"].format(model_path=model_path)
 
+##########################
 
 # 卸载模型
 def unload_model():
@@ -66,6 +78,7 @@ def unload_model():
     llm = None
     return locale["unload_model_success"]
 
+##########################
 
 # 生成提示词
 def upsampling_prompt(quality_tags, mode_tags, length_tags, tags, max_token, temp, Seed, top_p, min_p, top_k):
@@ -89,6 +102,7 @@ def upsampling_prompt(quality_tags, mode_tags, length_tags, tags, max_token, tem
 
     return output['choices'][0]['text']
 
+##########################
 
 # 格式化输出
 def extract_and_format(model_out):
@@ -117,8 +131,9 @@ def extract_and_format(model_out):
 
     return formatted_output
 
+##########################
 
-# 格式化输出
+# 排除标签
 def remove_words_by_regex(sentence, pattern):
     # 移除末尾的逗号和空格（如果有的话）
     patterns = pattern.rstrip(', ')
@@ -143,6 +158,7 @@ def remove_words_by_regex(sentence, pattern):
     result = ', '.join(filtered_words)
     return result
 
+##########################
 
 # 更新格式化输出
 def update_format_output(formatted_text, banned_tags):
@@ -154,6 +170,7 @@ def update_format_output(formatted_text, banned_tags):
     format_output = gr.Textbox(value=formatted, interactive=False)
     return format_output
 
+##########################
 
 # 复制
 def copy_to_clipboard(output):
@@ -163,16 +180,23 @@ def copy_to_clipboard(output):
     except Exception as e:
         raise gr.Error(locale["copy_fail"])
 
+##########################
 
 # 获得模型列表
 print(locale["model_searching"])
 available_models = list_model_files()
 
+##########################
+
 print(locale["gradio_launching"])
+
+##########################
 
 # 加载教程
 with open(os.path.join('Locales', 'Tutorials', f'{lang}.md'), "r", encoding="utf-8") as tutorial:
     tutorial_content = tutorial.read()
+
+##########################
 
 # gradio 界面
 with gr.Blocks(theme=theme, title="TIPO") as demo:
@@ -182,6 +206,7 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
 
     with gr.Row():
         with gr.Column():
+            # -------------------------
             # 生成标签页
             with gr.Tab(locale["tab_generate"]):
                 with gr.Row(equal_height=True):
@@ -209,6 +234,7 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
                 # 标签3
                 tags = gr.Textbox(label=locale["general_tags"])
 
+            # -------------------------
             # 设置标签页
             with gr.Tab(locale["tab_settings"]):
                 # 模型设置
@@ -231,10 +257,12 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
                     temprature = gr.Number(label="temperature", value=0.8)
                 top_k = gr.Number(label="top_k", value=60)
 
+            # -------------------------
             # 教程标签页
             with gr.Tab(locale["tab_tutorial"]):
                 gr.Markdown(tutorial_content)
 
+        # -------------------------
         # 结果展示
         with gr.Column():
             with gr.Row():
@@ -245,6 +273,7 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
                 formatted_output = gr.Textbox(label=locale["formatted_result"], interactive=False)
                 raw_output.change(update_format_output, inputs=[raw_output, banned_tags], outputs=formatted_output)
 
+    # -------------------------
     # 写提示词
     upsampling_btn.click(
         fn=upsampling_prompt,
@@ -252,6 +281,7 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
         outputs=raw_output
     )
 
+    # -------------------------
     # 加载模型
     load_btn.click(
         fn=load_model,
@@ -259,6 +289,7 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
         outputs=load_feedback
     )
 
+    # -------------------------
     # 卸载模型
     unload_btn.click(
         fn=unload_model,
@@ -266,6 +297,7 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
         outputs=load_feedback
     )
 
+    # -------------------------
     # 随机种子
     Seed_random.click(
         fn=random_seed,
@@ -273,6 +305,7 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
         outputs=Seed
     )
 
+    # -------------------------
     # 复制到剪贴板
     copy_btn.click(
         fn=copy_to_clipboard,

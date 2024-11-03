@@ -51,6 +51,5 @@ pyperclip
 
 ---
 
-Also, anyone know what the `aspect_ratio` parameter is for? I don't get it myself (  
 If you crash when double-clicking the script, try running `python GUI.py` in `cmd`; anyway, I have no idea why since
 this was all new to me.

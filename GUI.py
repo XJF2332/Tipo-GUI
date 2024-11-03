@@ -47,6 +47,7 @@ theme = gr.themes.Ocean(
     checkbox_background_color_focus='*primary_200'
 )
 
+
 ##########################
 
 # 获取模型文件列表
@@ -55,11 +56,13 @@ def list_model_files():
     model_files = [f for f in os.listdir(models_dir) if f.endswith('.gguf')]
     return [os.path.join(models_dir, f) for f in model_files]
 
+
 ##########################
 
 # 随机种
 def random_seed():
     return random.randint(1, 2 ** 31 - 1)
+
 
 ##########################
 
@@ -70,6 +73,7 @@ def load_model(model_path, gpu, n_ctx):
     llm = Llama(model_path=model_path, n_gpu_layers=gpu, n_ctx=n_ctx)
     return locale["load_model_success"].format(model_path=model_path)
 
+
 ##########################
 
 # 卸载模型
@@ -78,35 +82,81 @@ def unload_model():
     llm = None
     return locale["unload_model_success"]
 
+
 ##########################
 
 # 生成提示词
-def upsampling_prompt(quality_tags, mode_tags, length_tags, tags, max_token, temp, Seed, top_p, min_p, top_k):
+def upsampling_prompt(quality_tags, mode_tags, length_tags, tags, max_token, temp, Seed, top_p, min_p, top_k, rating,
+                      artist, characters, meta):
     if llm is None:
         return locale["model_not_loaded"]
 
-    output = llm(
-        f"quality: {quality_tags}\naspect ratio: 1.0\ntarget: <|{length_tags}|> <|{mode_tags}|>\ntag: {tags}",
-        # Prompt
-        max_tokens=max_token,
-        echo=True,
-        temperature=temp,
-        seed=Seed,
-        top_p=top_p,
-        min_p=min_p,
-        top_k=top_k
-    )
+    if mode_tags == "None" or mode_tags == "tag_to_long" or mode_tags == "tag_to_short_to_long":
+        output = llm(
+            f"quality: {quality_tags}\naspect ratio: 1.0\ntarget: <|{length_tags}|> <|{mode_tags}|>\nrating: {rating}\nartist: {artist}\ncharacters: {characters}\nmeta: {meta}\ntag: {tags}",
+            # Prompt
+            max_tokens=max_token,
+            echo=True,
+            temperature=temp,
+            seed=Seed,
+            top_p=top_p,
+            min_p=min_p,
+            top_k=top_k
+        )
+    elif mode_tags == "long_to_tag":
+        output = llm(
+            f"quality: {quality_tags}\naspect ratio: 1.0\ntarget: <|{length_tags}|> <|{mode_tags}|>\nrating: {rating}\nartist: {artist}\ncharacters: {characters}\nmeta: {meta}\nlong: {tags}",
+            # Prompt
+            max_tokens=max_token,
+            echo=True,
+            temperature=temp,
+            seed=Seed,
+            top_p=top_p,
+            min_p=min_p,
+            top_k=top_k
+        )
+    else:
+        output = llm(
+            f"quality: {quality_tags}\naspect ratio: 1.0\ntarget: <|{length_tags}|> <|{mode_tags}|>\nrating: {rating}\nartist: {artist}\ncharacters: {characters}\nmeta: {meta}\nshort: {tags}",
+            # Prompt
+            max_tokens=max_token,
+            echo=True,
+            temperature=temp,
+            seed=Seed,
+            top_p=top_p,
+            min_p=min_p,
+            top_k=top_k
+        )
 
     # for testing
     # print(output)
 
     return output['choices'][0]['text']
 
+
 ##########################
 
 # 格式化输出
-def extract_and_format(model_out):
-    fields_to_extract = ['quality', 'artist', 'tag', 'long', 'short', 'characters', 'meta', 'rating']
+def extract_and_format(model_out, mode_tags):
+    if mode_tags == "None":
+        fields_to_extract = ['quality', 'artist', 'characters', 'meta', 'rating', 'tag']
+    elif mode_tags == "tag_to_long":
+        fields_to_extract = ['quality', 'artist', 'characters', 'meta', 'rating', 'tag', 'long']
+    elif mode_tags == "tag_to_short_to_long":
+        fields_to_extract = ['quality', 'artist', 'characters', 'meta', 'rating', 'tag', 'short', 'long']
+    elif mode_tags == "long_to_tag":
+        fields_to_extract = ['quality', 'artist', 'characters', 'meta', 'rating', 'long', 'tag']
+    elif mode_tags == "short_to_long":
+        fields_to_extract = ['quality', 'artist', 'characters', 'meta', 'rating', 'short', 'long']
+    elif mode_tags == "short_to_tag_to_long":
+        fields_to_extract = ['quality', 'artist', 'characters', 'meta', 'rating', 'short', 'tag', 'long']
+    elif mode_tags == "short_to_long_to_tag":
+        fields_to_extract = ['quality', 'artist', 'characters', 'meta', 'rating', 'short', 'long', 'tag']
+    elif mode_tags == "short_to_tag":
+        fields_to_extract = ['quality', 'artist', 'characters', 'meta', 'rating', 'short', 'tag']
+    else:
+        print("Error: Invalid mode_tags value")
+        return "Error: Invalid mode_tags value"
 
     def extract_fields(model_output):
         extracted_data = {}
@@ -130,6 +180,7 @@ def extract_and_format(model_out):
     formatted_output = formatted_output.rstrip('\n')
 
     return formatted_output
+
 
 ##########################
 
@@ -158,17 +209,19 @@ def remove_words_by_regex(sentence, pattern):
     result = ', '.join(filtered_words)
     return result
 
+
 ##########################
 
 # 更新格式化输出
-def update_format_output(formatted_text, banned_tags):
-    text = extract_and_format(formatted_text)
+def update_format_output(formatted_text, banned_tags, mode_tags):
+    text = extract_and_format(formatted_text, mode_tags)
     if banned_tags:
         formatted = remove_words_by_regex(text, banned_tags)
     else:
         formatted = text
     format_output = gr.Textbox(value=formatted, interactive=False)
     return format_output
+
 
 ##########################
 
@@ -179,6 +232,7 @@ def copy_to_clipboard(output):
         gr.Info(locale["copy_success"])
     except Exception as e:
         raise gr.Error(locale["copy_fail"])
+
 
 ##########################
 
@@ -214,12 +268,11 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
                     Seed = gr.Number(label=locale["seed"], value=-1)
                     Seed_random = gr.Button(locale["random_seed"])
                 with gr.Row():
-                    # 标签1
+                    # 模式和长度标签
                     mode_tags = gr.Dropdown(
                         label=locale["mode"],
                         choices=["None", "tag_to_long", "long_to_tag", "short_to_long", "short_to_tag",
-                                 "tag_to_short_to_long",
-                                 "short_to_tag_to_long", "short_to_long_to_tag"],
+                                 "tag_to_short_to_long", "short_to_tag_to_long", "short_to_long_to_tag"],
                         value="None"
                     )
                     length_tags = gr.Dropdown(
@@ -228,10 +281,19 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
                         value="short"
                     )
                 with gr.Row():
-                    # 标签2
-                    quality_tags = gr.Textbox(label=locale["quality"])
+                    # 质量和屏蔽标签
+                    quality_tags = gr.Textbox(label=locale["quality"], value="masterpiece")
                     banned_tags = gr.Textbox(label=locale["banned_tags"])
-                # 标签3
+                with gr.Row():
+                    # 分级和画师
+                    rating_tags = gr.Dropdown(label=locale["rating"], choices=["safe", "sensitive", "nsfw", "explicit"],
+                                              value="safe")
+                    artist_tags = gr.Textbox(label=locale["artist"])
+                with gr.Row():
+                    # 角色和meta标签
+                    character_tags = gr.Textbox(label=locale["character"])
+                    meta_tags = gr.Textbox(label=locale["meta"], value="hires")
+                # 通用标签
                 tags = gr.Textbox(label=locale["general_tags"])
 
             # -------------------------
@@ -271,13 +333,16 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
             with gr.Row():
                 raw_output = gr.Textbox(label=locale["result"], interactive=False)
                 formatted_output = gr.Textbox(label=locale["formatted_result"], interactive=False)
-                raw_output.change(update_format_output, inputs=[raw_output, banned_tags], outputs=formatted_output)
+                # 更新格式化输出
+                raw_output.change(update_format_output, inputs=[raw_output, banned_tags, mode_tags],
+                                  outputs=formatted_output)
 
     # -------------------------
     # 写提示词
     upsampling_btn.click(
         fn=upsampling_prompt,
-        inputs=[quality_tags, mode_tags, length_tags, tags, max_tokens, temprature, Seed, top_p, min_p, top_k],
+        inputs=[quality_tags, mode_tags, length_tags, tags, max_tokens, temprature, Seed, top_p, min_p, top_k,
+                rating_tags, artist_tags, character_tags, meta_tags],
         outputs=raw_output
     )
 

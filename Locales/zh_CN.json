@@ -30,5 +30,7 @@
     "tab_generate": "生成",
     "tab_settings": "设置",
     "tab_tutorial": "教程",
-    "unload_model_success": "模型已卸载"
+    "unload_model_success": "模型已卸载",
+    "img_length": "图片长度",
+    "img_width": "图片宽度"
 }

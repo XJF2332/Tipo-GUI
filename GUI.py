@@ -87,13 +87,15 @@ def unload_model():
 
 # 生成提示词
 def upsampling_prompt(quality_tags, mode_tags, length_tags, tags, max_token, temp, Seed, top_p, min_p, top_k, rating,
-                      artist, characters, meta):
+                      artist, characters, meta, length, width):
+    aspect_ratio = round(length / width, 1)
+
     if llm is None:
         return locale["model_not_loaded"]
 
     if mode_tags == "None" or mode_tags == "tag_to_long" or mode_tags == "tag_to_short_to_long":
         output = llm(
-            f"quality: {quality_tags}\naspect ratio: 1.0\ntarget: <|{length_tags}|> <|{mode_tags}|>\nrating: {rating}\nartist: {artist}\ncharacters: {characters}\nmeta: {meta}\ntag: {tags}",
+            f"quality: {quality_tags}\naspect ratio: {aspect_ratio}\ntarget: <|{length_tags}|> <|{mode_tags}|>\nrating: {rating}\nartist: {artist}\ncharacters: {characters}\nmeta: {meta}\ntag: {tags}",
             # Prompt
             max_tokens=max_token,
             echo=True,
@@ -105,7 +107,7 @@ def upsampling_prompt(quality_tags, mode_tags, length_tags, tags, max_token, tem
         )
     elif mode_tags == "long_to_tag":
         output = llm(
-            f"quality: {quality_tags}\naspect ratio: 1.0\ntarget: <|{length_tags}|> <|{mode_tags}|>\nrating: {rating}\nartist: {artist}\ncharacters: {characters}\nmeta: {meta}\nlong: {tags}",
+            f"quality: {quality_tags}\naspect ratio: {aspect_ratio}\ntarget: <|{length_tags}|> <|{mode_tags}|>\nrating: {rating}\nartist: {artist}\ncharacters: {characters}\nmeta: {meta}\nlong: {tags}",
             # Prompt
             max_tokens=max_token,
             echo=True,
@@ -117,7 +119,7 @@ def upsampling_prompt(quality_tags, mode_tags, length_tags, tags, max_token, tem
         )
     else:
         output = llm(
-            f"quality: {quality_tags}\naspect ratio: 1.0\ntarget: <|{length_tags}|> <|{mode_tags}|>\nrating: {rating}\nartist: {artist}\ncharacters: {characters}\nmeta: {meta}\nshort: {tags}",
+            f"quality: {quality_tags}\naspect ratio: {aspect_ratio}\ntarget: <|{length_tags}|> <|{mode_tags}|>\nrating: {rating}\nartist: {artist}\ncharacters: {characters}\nmeta: {meta}\nshort: {tags}",
             # Prompt
             max_tokens=max_token,
             echo=True,
@@ -254,10 +256,6 @@ with open(os.path.join('Locales', 'Tutorials', f'{lang}.md'), "r", encoding="utf
 
 # gradio 界面
 with gr.Blocks(theme=theme, title="TIPO") as demo:
-    gr.Markdown("""
-    # TIPO
-    """)
-
     with gr.Row():
         with gr.Column():
             # -------------------------
@@ -267,6 +265,10 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
                     # 种子
                     Seed = gr.Number(label=locale["seed"], value=-1)
                     Seed_random = gr.Button(locale["random_seed"])
+                with gr.Row():
+                    # 长宽比
+                    img_length = gr.Number(label=locale["img_length"], value=512, minimum=256, maximum=2048, step=1)
+                    img_width = gr.Number(label=locale["img_width"], value=512, minimum=256, maximum=2048, step=1)
                 with gr.Row():
                     # 模式和长度标签
                     mode_tags = gr.Dropdown(
@@ -342,7 +344,7 @@ with gr.Blocks(theme=theme, title="TIPO") as demo:
     upsampling_btn.click(
         fn=upsampling_prompt,
         inputs=[quality_tags, mode_tags, length_tags, tags, max_tokens, temprature, Seed, top_p, min_p, top_k,
-                rating_tags, artist_tags, character_tags, meta_tags],
+                rating_tags, artist_tags, character_tags, meta_tags, img_length, img_width],
         outputs=raw_output
     )
 

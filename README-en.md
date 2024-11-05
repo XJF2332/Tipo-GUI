@@ -16,7 +16,7 @@ at it, so I have to use AI)
 
 ## Dependencies
 
-You need the GPU version of `llama-cpp-python`. I don't know if there is a `n_gpu_layers` parameter in the CPU version, so use GPU version for safety.
+It's better to use the GPU version of `llama-cpp-python` because the parameter `n_gpu_layers` won't work in CPU version.
 
 ```
 llama-cpp-python

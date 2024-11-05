@@ -14,7 +14,7 @@
 
 ## 依赖
 
-llama-cpp-python 要 GPU 版的，我不知道 CPU 版本是否支持`n_gpu_layers`这个参数，我也没用过 CPU 版，保险起见还是用 GPU 的吧
+llama-cpp-python 最好要 GPU 版的，在 CPU 版本下`n_gpu_layers`参数不会生效
 
 ```
 llama-cpp-python

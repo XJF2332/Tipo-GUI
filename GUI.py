@@ -138,6 +138,7 @@ def upsampling_prompt(quality_tags, mode_tags, length_tags, tags, max_token, tem
 
 ##########################
 
+# 把 artist 放到末尾
 def send_artist_to_end(text):
     pattern1 = r"\nartist:.*"
     # 移动到末尾
